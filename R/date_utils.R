@@ -40,6 +40,7 @@ get_bhav_archive_url <- function(day_date)
 
 download_for_month <- function(month, year)
 {
+  reqire(Hmisc)
   valid_months <- c('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC')
   month <- toupper(month)
   if(month %in% valid_months)
