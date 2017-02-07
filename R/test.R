@@ -27,4 +27,8 @@ sapply(zip_files, FUN = process_bhav_arvhive)
 source("process_bhav_archives.R")
 process_bhav_archives()
 
-download.file('https://www.nseindia.com/content/historical/EQUITIES/2017/JAN/cm30JAN2017bhav.csv.zip', destfile = 'C:/data/archive/cm30JAN2017bhav.csv.zip', ,method="libcurl")
+download.file('https://www.nseindia.com/content/historical/EQUITIES/2017/JAN/cm30JAN2017bhav.csv.zip', destfile = 'C:/data/archive/cm30JAN2017bhav.csv.zip', method="libcurl")
+
+source("date_utils.R")
+
+download_for_month('JAN', 2017)
