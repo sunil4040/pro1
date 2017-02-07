@@ -26,7 +26,6 @@ get_archive_name <- function(day_date)
 
 get_bhav_archive_url <- function(day_date)
 {
-  # URL Example - https://www.nseindia.com/content/historical/EQUITIES/2017/JAN/cm30JAN2017bhav.csv.zip
   # URL Example - https://www.nseindia.com/content/historical/EQUITIES/2017/JAN/cm02JAN2017bhav.csv.zip
   day_date <- as.Date(day_date)
   if(is_business_day(day_date))
@@ -40,7 +39,8 @@ get_bhav_archive_url <- function(day_date)
 
 download_for_month <- function(month, year)
 {
-  reqire(Hmisc)
+  today <- Sys.Date()
+  require(Hmisc)
   valid_months <- c('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC')
   month <- toupper(month)
   if(month %in% valid_months)
@@ -51,6 +51,10 @@ download_for_month <- function(month, year)
     dates_of_month <- as.character(seq.Date(as.Date(month_start_date, "%Y-%b-%d"), as.Date(month_end_date, "%Y-%b-%d"), 'day'))
     for(date_of_month in dates_of_month)
     {
+      if(date_of_month > today)
+      {
+        break
+      }
       if(is_business_day(date_of_month))
       {
         url_for_date <- get_bhav_archive_url(date_of_month)

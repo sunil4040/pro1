@@ -2,6 +2,9 @@ extracted_location = "C:/data/extracted"
 
 process_bhav_arvhive <- function(bhav_archive)
 {
+  bhav_cons_file <- 'C:/data/bhav_cons/bhav_cons.csv'
+  bhav_cons_exists <- file.exists(bhav_cons_file)
+  
   if(file.exists(bhav_archive))
   {
     unzip (bhav_archive, exdir = extracted_location)
@@ -13,12 +16,24 @@ process_bhav_arvhive <- function(bhav_archive)
       bhav <- bhav[!is.na(bhav$SERIES), ]
       bhav <- bhav[bhav$SERIES %in% c('EQ', 'BE'), ]
       bhav$VWAP <- round(bhav$TOTTRDVAL / bhav$TOTTRDQTY, digits = 2)
-      write.csv(bhav, extracted_file_name, row.names = FALSE, quote = FALSE)
+      bhav_cons <- data.frame()
+      if(bhav_cons_exists)
+      {
+        bhav_cons <- read.csv(bhav_cons_file, header = TRUE, sep = ',', dec = '.')
+        bhav_cons <- rbind(bhav_cons, bhav)
+      }
+      else
+      {
+        bhav_cons <- bhav
+        file.create(bhav_cons_file)
+      }
+      write.csv(bhav_cons, bhav_cons_file, row.names = FALSE, quote = FALSE)
     }
     else
     {
       print ('Archive already processed : ', extracted_file_name)
     }
+    file.remove(extracted_file_name)
   }
   else
   {
