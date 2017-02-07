@@ -5,6 +5,6 @@ process_bhav_archives <- function()
     file.remove('C:/data/processed/bhav_cons.csv')
   }
   bhav_archive_location <- "C:/data/archive/"
-  zip_files <- list.files(bhav_archive_location, full.names = TRUE)
+  zip_files <- list.files(bhav_archive_location, pattern = "*.csv.zip", full.names = TRUE)
   sapply(zip_files, FUN = process_bhav_arvhive)
 }
