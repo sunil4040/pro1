@@ -32,3 +32,7 @@ download.file('https://www.nseindia.com/content/historical/EQUITIES/2017/JAN/cm3
 source("date_utils.R")
 
 download_for_month('JAN', 2017)
+
+library(dplyr)
+recs_not_na <- recs[!is.na(recs$SCRIP), ]
+recs_counts <- recs_not_na %>% group_by(SCRIP) %>% summarize(count=n())
