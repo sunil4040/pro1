@@ -36,3 +36,5 @@ download_for_month('JAN', 2017)
 library(dplyr)
 recs_not_na <- recs[!is.na(recs$SCRIP), ]
 recs_counts <- recs_not_na %>% group_by(SCRIP) %>% summarize(count=n())
+
+# Testing to setup
