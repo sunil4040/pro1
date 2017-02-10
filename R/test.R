@@ -34,7 +34,9 @@ source("date_utils.R")
 download_for_month('JAN', 2017)
 
 library(dplyr)
+recs <- read.csv('C:/data/processed/recs.csv', header = TRUE, sep = ';', dec = '.', quote = '|')
 recs_not_na <- recs[!is.na(recs$SCRIP), ]
 recs_counts <- recs_not_na %>% group_by(SCRIP) %>% summarize(count=n())
 
 # Testing to setup
+get_scrpits_list('NSE')
