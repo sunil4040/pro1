@@ -4,7 +4,6 @@ import write_to_csv
 import get_scripts_list
 
 data_location = "C:/data/html/"
-actions = set()
 scripts_list = get_scripts_list.get_scripts_list()
 for f in os.listdir(data_location):
     full_file_path = os.path.join(data_location, f)
