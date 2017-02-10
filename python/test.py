@@ -18,11 +18,16 @@
 # else:
 #     print ('NA')
 
-import datetime
+# import datetime
+#
+# date_string = '2015 research report'
+# try:
+#     datetime_object = datetime.datetime.strptime(date_string, '%B %d, %Y')
+#     print (datetime_object)
+# except ValueError:
+#     print (date_string, 'Exception occured')
 
-date_string = '2015 research report'
-try:
-    datetime_object = datetime.datetime.strptime(date_string, '%B %d, %Y')
-    print (datetime_object)
-except ValueError:
-    print (date_string, 'Exception occured')
+import sys
+
+print (len(sys.argv))
+print (sys.argv[0])
