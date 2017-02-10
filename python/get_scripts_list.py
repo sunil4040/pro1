@@ -8,7 +8,7 @@ def get_scripts_list():
     return pd.read_csv('C:/data/config/EQUITY_L.csv', encoding='cp1252', header=0, names=column_names, usecols=['SYMBOL', 'NAME_OF_COMPANY'])
 
 def get_script_symbol(scrip, scripts_list):
-    symbol = (scripts_list.loc[scripts_list.NAME_OF_COMPANY.str.startswith(scrip)]).SYMBOL
+    symbol = (scripts_list.loc[scripts_list.NAME_OF_COMPANY.str.startswith(scrip.upper())]).SYMBOL
     if len(symbol) == 1:
         return symbol.iloc[0]
     else:
