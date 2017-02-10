@@ -9,7 +9,7 @@ get_scrpits_list <- function(exchange)
     equities_list$NAME.OF.COMPANY <- toupper(equities_list$NAME.OF.COMPANY)
     write.csv(equities_list, 'C:/data/config/EQUITY_L.csv', row.names = FALSE, quote = FALSE)
   }
-  else if(exchange == 'NSE')
+  else if(exchange == 'BSE')
   {
     # Download and process BSE scripts list
   }
