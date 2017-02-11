@@ -27,7 +27,6 @@ process_bhav_arvhive <- function(bhav_archive)
         bhav_cons <- bhav
         file.create(bhav_cons_file)
       }
-      bhav_cons <- unique(bhav_cons)
       write.csv(bhav_cons, bhav_cons_file, row.names = FALSE, quote = FALSE)
     }
     else
