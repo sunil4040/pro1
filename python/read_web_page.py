@@ -9,7 +9,6 @@ import datetime
 valid_actions = ('BUY', 'ACCUMULATE', 'HOLD', 'SELL', 'REDUCE', 'NEUTRAL')
 
 def get_recmd_data(html_content, scripts_list, bhav_cons):
-
     full_soup = BeautifulSoup(html_content, 'html.parser')
     clearfix_tags = full_soup.find('ul', attrs={"class" : "nws_listing"}).find_all('div', attrs={"class" : "clearfix"})
     manual_updates = []
@@ -37,7 +36,7 @@ def get_recmd_data(html_content, scripts_list, bhav_cons):
             for valid_action in valid_actions:
                 if action.find(valid_action) != -1:
                     process_rec(valid_action, scrip, target, recommender, rec_date_string, date_on_mc, mc_url,
-                                title, recommendations, manual_updates, recs_db, cur, scripts_list, bhav_cons)
+                                title, recommendations, manual_updates, cur, recs_db, scripts_list, bhav_cons)
                     #     [valid_action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url],
                     #     [title, report_date, date_on_mc, mc_url])
                     break
@@ -46,27 +45,30 @@ def get_recmd_data(html_content, scripts_list, bhav_cons):
                 manual_updates.append([title, report_date, date_on_mc, mc_url])
         else:
             process_rec(action, scrip, target, recommender, rec_date_string, date_on_mc, mc_url,
-                        title, recommendations, manual_updates, recs_db, cur, scripts_list, bhav_cons)
+                        title, recommendations, manual_updates, cur, recs_db, scripts_list, bhav_cons)
             # process_rec(recommendations, manual_updates, symbol, recs_db, cur,
             #             [action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url],
             #             [title, report_date, date_on_mc, mc_url])
+    cur.close()
     recs_db.commit()
     recs_db.close()
     return (recommendations, manual_updates)
 
 def process_rec(action, scrip, target, recommender, rec_date_string, date_on_mc, mc_url,
-               title, recommendations, manual_updates, recs_db, cur, scripts_list, bhav_cons):
+                title, recommendations, manual_updates, cur, recs_db, scripts_list, bhav_cons):
     symbol = get_scripts_list.get_script_symbol(scrip, scripts_list)
     if symbol == 'NA':
         manual_updates.append([title, rec_date_string, date_on_mc, mc_url])
     else:
-        price_on_rec_date = get_price_on_date(symbol, rec_date_string, bhav_cons)
+        price_on_rec_date = \
+            float("{0:.2f}".format(get_price_on_date.get_price_for_date(symbol, rec_date_string, bhav_cons)))
         status = insert_rec_into_db(cur,
-                           [action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url])
-        if(status == 0):
+                [action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url])
+        if status == 0:
             recommendations.append(
                 [action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url])
-        elif(status == -1):
+        elif status == -1:
+            cur.close()
             recs_db.rollback()
             recs_db.close()
             sys.exit(-1)
@@ -74,13 +76,16 @@ def process_rec(action, scrip, target, recommender, rec_date_string, date_on_mc,
 def insert_rec_into_db(cur, recm_rec):
     try:
         cur.execute("INSERT INTO RECS"
-                    "(ACTION, COMPANY_NAME, SYMBOL, TARGET, RECOMMENDER, REC_DATE, PRICE_ON_REC_DATE, DATE_ON_MC, URL) "
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", (recm_rec))
+                    "(ACTION, COMPANY_NAME, SYMBOL, TARGET, RECOMMENDER, REC_DATE, DATE_ON_MC, PRICE_ON_REC_DATE, URL) "
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", recm_rec)
     except sqlite3.IntegrityError:
-        print (recm_rec, 'Already present')
+        print(recm_rec, 'Already present')
         return 1
+    except sqlite3.Error as e:
+        print("sqlite3 error: {0}".format(e))
+        return -1
     except:
-        print ("Unexpected error:", sys.exc_info()[0])
+        print("Unexpected error:", sys.exc_info()[0])
         return -1
     return 0
 
