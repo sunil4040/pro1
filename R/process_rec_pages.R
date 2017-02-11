@@ -15,8 +15,12 @@ process_rec_pages <- function(end_number)
       dest_file <- paste0(temp_location, file_name)
       download.file(url = full_url, destfile = dest_file, method="libcurl")
       command <- paste0('python C:/Users/sanas/PycharmProjects/ProcessRecs/launch.py ', temp_location)
-      system(command, intern = FALSE, ignore.stdout = TRUE, ignore.stderr = FALSE, wait = TRUE)
+      stat <- system(command, intern = FALSE, ignore.stdout = TRUE, ignore.stderr = FALSE, wait = TRUE)
       file.remove(dest_file)
+      if(stat != 0)
+      {
+        return
+      }
       if(end_number == number)
         break
     }
