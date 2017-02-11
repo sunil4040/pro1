@@ -27,7 +27,18 @@
 # except ValueError:
 #     print (date_string, 'Exception occured')
 
-import sys
+# import sys
+#
+# print (len(sys.argv))
+# print (sys.argv[0])
 
-print (len(sys.argv))
-print (sys.argv[0])
+import get_price_on_date
+import datetime
+
+bhav_cons = get_price_on_date.get_bhav_cons()
+try:
+    datetime_object = datetime.datetime.strptime('December 29, 2016', '%B %d, %Y')
+    date_string = (datetime_object.strftime('%d-%b-%Y')).upper()
+except:
+    print('Failed to convert date')
+print (get_price_on_date.get_price_for_date('ITC', date_string, bhav_cons))
