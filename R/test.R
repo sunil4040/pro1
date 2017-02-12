@@ -40,3 +40,5 @@ recs_counts <- recs_not_na %>% group_by(SYMBOL) %>% summarize(count=n())
 
 # Testing to setup
 get_scrpits_list('NSE')
+
+aggregate(PERF_TO_DATE ~ RECOMMENDER, recs_wo_url[grepl('2017$', recs_wo_url$REC_DATE), ], max)
