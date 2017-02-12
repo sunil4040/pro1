@@ -5,6 +5,7 @@ import get_price_on_date
 import sqlite3
 import sys
 import datetime
+import re
 
 valid_actions = ('BUY', 'ACCUMULATE', 'HOLD', 'SELL', 'REDUCE', 'NEUTRAL')
 
@@ -20,7 +21,7 @@ def get_recmd_data(html_content, scripts_list, bhav_cons):
         action = title.split()[0].strip().upper()
         scrip = string.capwords(title.split(';')[0][len(action)+1 : ].strip())
         words = title.split(':')
-        target = words[0].split()[-1].replace(',', '')
+        target = re.findall('(\d+)', words[0].split()[-1].replace(',', ''))
         recommender = string.capwords(words[-1].strip())
         temp_date = str(tag.find('p', attrs={"class" : "MT2"}).contents[0]).replace("\n", "").split()
         report_date = ''.join([temp_date[-3], ' ', temp_date[-2], ' ', temp_date[-1][:-1]])
@@ -37,8 +38,6 @@ def get_recmd_data(html_content, scripts_list, bhav_cons):
                 if action.find(valid_action) != -1:
                     process_rec(valid_action, scrip, target, recommender, rec_date_string, date_on_mc, mc_url,
                                 title, recommendations, manual_updates, cur, recs_db, scripts_list, bhav_cons)
-                    #     [valid_action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url],
-                    #     [title, report_date, date_on_mc, mc_url])
                     break
                 i = i + 1
             if i == len(valid_actions):
@@ -46,9 +45,6 @@ def get_recmd_data(html_content, scripts_list, bhav_cons):
         else:
             process_rec(action, scrip, target, recommender, rec_date_string, date_on_mc, mc_url,
                         title, recommendations, manual_updates, cur, recs_db, scripts_list, bhav_cons)
-            # process_rec(recommendations, manual_updates, symbol, recs_db, cur,
-            #             [action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url],
-            #             [title, report_date, date_on_mc, mc_url])
     cur.close()
     recs_db.commit()
     recs_db.close()

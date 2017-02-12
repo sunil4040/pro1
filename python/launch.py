@@ -1,9 +1,8 @@
 import os.path
+import sys
 import read_web_page
 import write_to_csv
-import get_scripts_list
-import get_price_on_date
-import sys
+import get_data_csv
 
 if len(sys.argv) != 2:
     print('Usage: launch.py <html files input directory>')
@@ -12,8 +11,8 @@ data_location = sys.argv[1]
 if not os.path.isdir(data_location):
     print(data_location, 'is not a valid directory>')
     sys.exit(-1)
-scripts_list = get_scripts_list.get_scripts_list()
-bhav_cons = get_price_on_date.get_bhav_cons()
+scripts_list = get_data_csv.get_scripts_list()
+bhav_cons = get_data_csv.get_bhav_cons()
 for f in os.listdir(data_location):
     full_file_path = os.path.join(data_location, f)
     number = str(full_file_path).split('-')[1].split('.')[0]

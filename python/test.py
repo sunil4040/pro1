@@ -32,13 +32,24 @@
 # print (len(sys.argv))
 # print (sys.argv[0])
 
-import get_price_on_date
-import datetime
+# import get_price_on_date
+# import datetime
+#
+# bhav_cons = get_price_on_date.get_bhav_cons()
+# try:
+#     datetime_object = datetime.datetime.strptime('December 29, 2016', '%B %d, %Y')
+#     date_string = (datetime_object.strftime('%d-%b-%Y')).upper()
+# except:
+#     print('Failed to convert date')
+# print (get_price_on_date.get_price_for_date('ITC', date_string, bhav_cons))
 
-bhav_cons = get_price_on_date.get_bhav_cons()
-try:
-    datetime_object = datetime.datetime.strptime('December 29, 2016', '%B %d, %Y')
-    date_string = (datetime_object.strftime('%d-%b-%Y')).upper()
-except:
-    print('Failed to convert date')
-print (get_price_on_date.get_price_for_date('ITC', date_string, bhav_cons))
+# import requests
+# html = requests.get('http://www.moneycontrol.com/news/broker-research-reports-13-1-next-0.html')
+# print (html.content)
+
+# import date_utils
+# print(date_utils.get_business_day('15-NOV-2016'))
+
+import re
+
+print(re.findall('(\d+)', 'Rs.600'))

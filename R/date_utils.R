@@ -14,6 +14,20 @@ is_business_day <- function(day_date)
   }
 }
 
+get_business_day <- function(day_date)
+{
+  if(is_business_day(day_date))
+  {
+    return (day_date)
+  }
+  else
+  {
+    day_date <- as.Date(day_date)
+    previous_day = day_date - 1
+    return (get_business_day(previous_day))
+  }
+}
+
 get_archive_name <- function(day_date)
 {
   day_date <- as.Date(day_date)
