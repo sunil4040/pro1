@@ -1,7 +1,7 @@
 import string
 from bs4 import BeautifulSoup
 import get_scripts_list
-import get_price_on_date
+import get_from_bhav_cons
 import sqlite3
 import sys
 import datetime
@@ -21,7 +21,10 @@ def get_recmd_data(html_content, scripts_list, bhav_cons):
         action = title.split()[0].strip().upper()
         scrip = string.capwords(title.split(';')[0][len(action)+1 : ].strip())
         words = title.split(':')
-        target = re.findall('(\d+)', words[0].split()[-1].replace(',', ''))
+        target_list = re.findall('(\d+)', words[0].split()[-1].replace(',', ''))
+        target = 0.0
+        if(len(target_list) > 0):
+            target = float("{0:.2f}".format(float(target_list[0])))
         recommender = string.capwords(words[-1].strip())
         temp_date = str(tag.find('p', attrs={"class" : "MT2"}).contents[0]).replace("\n", "").split()
         report_date = ''.join([temp_date[-3], ' ', temp_date[-2], ' ', temp_date[-1][:-1]])
@@ -29,7 +32,7 @@ def get_recmd_data(html_content, scripts_list, bhav_cons):
         date_on_mc = temp_date[:temp_date.find('|')-1].strip()
         mc_url = str(tag.h2.a['href']).strip()
         rec_date_string = get_date_valid(report_date)
-        if rec_date_string == 'INVALID_DATE':
+        if (rec_date_string == 'INVALID_DATE') or (len(target_list) == 0):
             manual_updates.append([title, report_date, date_on_mc, mc_url])
             continue
         if action not in valid_actions:
@@ -57,7 +60,7 @@ def process_rec(action, scrip, target, recommender, rec_date_string, date_on_mc,
         manual_updates.append([title, rec_date_string, date_on_mc, mc_url])
     else:
         price_on_rec_date = \
-            float("{0:.2f}".format(get_price_on_date.get_price_for_date(symbol, rec_date_string, bhav_cons)))
+            float("{0:.2f}".format(get_from_bhav_cons.get_price_for_date(symbol, rec_date_string, bhav_cons)))
         status = insert_rec_into_db(cur,
                 [action, scrip, symbol, target, recommender, rec_date_string, date_on_mc, price_on_rec_date, mc_url])
         if status == 0:
@@ -88,7 +91,7 @@ def insert_rec_into_db(cur, recm_rec):
 def get_date_valid(rec_date):
     try:
         datetime_object = datetime.datetime.strptime(rec_date, '%B %d, %Y')
-        date_string = (datetime_object.strftime('%d-%b-%Y')).upper()
+        date_string = datetime_object.strftime('%Y-%m-%d')
         return date_string
     except:
         return 'INVALID_DATE'

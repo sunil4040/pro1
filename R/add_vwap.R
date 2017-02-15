@@ -16,6 +16,7 @@ process_bhav_arvhive <- function(bhav_archive)
       bhav <- bhav[!is.na(bhav$SERIES), ]
       bhav <- bhav[bhav$SERIES %in% c('EQ', 'BE'), ]
       bhav$VWAP <- round(bhav$TOTTRDVAL / bhav$TOTTRDQTY, digits = 2)
+      bhav$TIMESTAMP <- sapply(bhav$TIMESTAMP, function(x) format(as.Date(x, '%d-%b-%Y'), '%Y-%m-%d'))
       bhav_cons <- data.frame()
       if(bhav_cons_exists)
       {

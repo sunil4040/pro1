@@ -50,6 +50,25 @@
 # import date_utils
 # print(date_utils.get_business_day('15-NOV-2016'))
 
-import re
+# import re
+#
+# print(re.findall('(\d+)', 'Rs.600'))
 
-print(re.findall('(\d+)', 'Rs.600'))
+# import pandas as pd
+# import datetime
+#
+# holidays = pd.read_csv('C:/data/config/HolidayList.csv', encoding='cp1252', header=0, names=['DATE'])
+# for day_date in holidays.DATE:
+#     datetime_object = datetime.datetime.strptime(day_date, '%d-%b-%Y')
+#     date_string = (datetime_object.strftime('%Y-%m-%d'))
+#     print(date_string)
+
+# import date_utils
+# print (date_utils.get_business_day('2017-01-26'))
+# print (date_utils.get_number_of_business_days('2017-01-20', '2017-01-27'))
+
+# import time
+# print (int(time.strftime('%H')))
+
+import datetime
+print ((datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d'))

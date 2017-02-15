@@ -2,7 +2,7 @@ is_business_day <- function(day_date)
 {
   day_date <- as.Date(day_date)
   holidays <- read.csv('C:/data/config/HolidayList.csv')
-  formatted_date <- format(day_date, "%d-%b-%Y")
+  formatted_date <- format(day_date, "%Y-%m-%d")
   day <- format(day_date, '%a')
   if((formatted_date %in% holidays$DATE) || (day %in% c('Sat', 'Sun')))
   {
@@ -74,7 +74,10 @@ download_for_month <- function(month, year)
         url_for_date <- get_bhav_archive_url(date_of_month)
         archive_name <- get_archive_name(date_of_month)
         file_name_on_disk <- paste0('C:/data/archive/', archive_name)
-        download.file(url = url_for_date, destfile = file_name_on_disk, method="libcurl")
+        if(!file.exists(file_name_on_disk))
+        {
+          download.file(url = url_for_date, destfile = file_name_on_disk, method="libcurl")
+        }
       }
     }
   }

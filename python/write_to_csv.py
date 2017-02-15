@@ -21,8 +21,8 @@ def write_to_csv_perf(full_file_path, data_list):
     with open(full_file_path, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writerow(['ACTION', 'COMPANY_NAME',  'SYMBOL', 'TARGET', 'RECOMMENDER',
-                             'REC_DATE', 'DATE_ON_MC', 'PRICE_ON_REC_DATE', 'URL',
-                             'LATEST_PRICE', 'PERF_TO_DATE'])
+                             'REC_DATE', 'DATE_ON_MC', 'PRICE_ON_REC_DATE', 'LATEST_PRICE',
+                             'PERF_TO_DATE', 'URL'])
         for item in data_list:
             csv_writer.writerow(item)
         csvfile.close()
