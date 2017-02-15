@@ -41,5 +41,17 @@ recs_counts <- recs_not_na %>% group_by(SYMBOL) %>% summarize(count=n())
 # Testing to setup
 get_scrpits_list('NSE')
 
-recs_wo_url <- recs[,-11]
+recs_perf <- read.csv('C:/data/processed/recs-perf.csv', header = TRUE, sep = ';', dec = '.', quote = '|')
+recs_wo_url <- recs_perf[,-17]
+recs_wo_url[recs_wo_url$TARGET_ACHIEVED == 'Yes', ]
+recs_best_perf_not_na <- recs_wo_url[!is.na(recs_wo_url$BEST_PERF), ]
+recs_best_perf_not_na[with(recs_best_perf_not_na, order(-BEST_PERF)), ]
 aggregate(PERF_TO_DATE ~ RECOMMENDER, recs_wo_url[grepl('2017$', recs_wo_url$REC_DATE), ], max)
+buy_recs <- recs_wo_url[recs_wo_url$ACTION %in% c('BUY', 'HOLD', 'ACCUMULATE'), ]
+targets_achieved <- buy_recs %>% group_by(RECOMMENDER, TARGET_ACHIEVED) %>% summarise(count=length(TARGET_ACHIEVED))
+recommenders <- aggregate(TARGET_ACHIEVED ~ RECOMMENDER, buy_recs, length)
+
+recommenders$noise_count <- sapply(recommenders$RECOMMENDER, function(x) if(nrow(targets_achieved[targets_achieved$TARGET_ACHIEVED == 'NOISE' & targets_achieved$RECOMMENDER == x, ])==0) 0 else targets_achieved[targets_achieved$TARGET_ACHIEVED == 'NOISE' & targets_achieved$RECOMMENDER == x, ]$count)
+
+recs_best_perf_not_na <- recs_wo_url[!is.na(recs_wo_url$BEST_PERF), ]
+recs_best_perf_not_na[with(recs_best_perf_not_na, order(-BEST_PERF)), ]
